@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from mappingAPI import api
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/genera',api.genera)
 ]

@@ -18,7 +18,8 @@ print("\nAdding Trees:")
 
 trees = [{'genus':'Acer','species':'rubrum','commonName':'Red Maple','wiki':'https://en.wikipedia.org/wiki/Acer_rubrum'},
          {'genus':'Acer','species':'platanoides','commonName':'Norway Maple','wiki':'https://en.wikipedia.org/wiki/Acer_platanoides'},
-         {'genus':'Acer','species':'saccharum','commonName':'Sugar Maple','wiki':'https://en.wikipedia.org/wiki/Acer_saccharum'}
+         {'genus':'Acer','species':'saccharum','commonName':'Sugar Maple','wiki':'https://en.wikipedia.org/wiki/Acer_saccharum'},
+         {'genus':'Arbutus','species':'menziesii','commonName':'Madrone','wiki':'https://en.wikipedia.org/wiki/Arbutus_menziesii'},
 ]
 for i in trees:
     print(i["commonName"])
