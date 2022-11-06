@@ -17,7 +17,7 @@
     {/each}
 </select>
 
-<select name="species" bind:value={selectedSpecies}>
+<select name="species" bind:value={selectedSpecies} on:change={changeSpecies}>
   <option selected disabled>Please select </option>
   {#each species as specie}
       <option value={specie.id}>
@@ -25,7 +25,8 @@
       </option>
   {/each}
 </select>
-
+<p>{commonName}</p>
+<p>{wiki}</p>
 
 <script>
 import { onMount } from 'svelte';
@@ -34,6 +35,8 @@ let genera = [] ;
 let selectedGenus;
 let species = [];
 let selectedSpecies;
+let commonName=''; 
+let wiki = '';
 
 onMount(async function () {
   const response = await fetch("http://localhost:8000/api/genera");
@@ -46,5 +49,16 @@ async function changeGenus(){
   const mySpecies = await resp.json()
   species = mySpecies;
   selectedSpecies='';
-}
+  commonName = '';
+  wiki = '';
+};
+
+function changeSpecies(){
+ for (let i=0; i<species.length; i++){
+  if (species[i].id === selectedSpecies){
+      commonName = species[i].commonName;
+      wiki = species[i].wiki;
+    }
+  }
+};
 </script>
