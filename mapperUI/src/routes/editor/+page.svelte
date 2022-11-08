@@ -28,8 +28,11 @@
 <p>{commonName}</p>
 <p>{wiki}</p>
 
+<LeafletMap />
+
 <script>
 import { onMount } from 'svelte';
+import LeafletMap from '$lib/LeafletMap.svelte';
 
 let genera = [] ;
 let selectedGenus;
