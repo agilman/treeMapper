@@ -2,6 +2,8 @@
   import { onMount, onDestroy} from 'svelte';
   import.meta.env.SSR
 
+  let leaflet;
+
   let mapElement;
   let map;
   
@@ -15,7 +17,8 @@
   let wiki = '';
   
   onMount(async function () {
-    const leaflet = await import('leaflet');
+    leaflet = await import('leaflet');
+    
     const parkResponse = await fetch("http://localhost:8000/api/parks");
     const myParks = await parkResponse.json();
   
@@ -27,7 +30,8 @@
       leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
-      console.log("setting init map")
+
+      map.on('click',mapClick);
     }
   
     const generaResponse = await fetch("http://localhost:8000/api/genera");
@@ -67,8 +71,17 @@
       }
     }
   };
-  </script>
 
+  function mapClick(e){
+    const mylatlng = [e.latlng['lat'],e.latlng['lng']];
+    var circle = leaflet.circle(mylatlng, {
+      color: 'green',
+      fillColor: '#1f9520',
+      fillOpacity: 0.5,
+      radius: 5
+    }).addTo(map);
+  };
+  </script>
 
 <h3>Hello, Welcome to Tree Mapper!</h3>
 <label for="parks">Parks:</label>
@@ -103,7 +116,7 @@
 <p>{wiki}</p>
 
 <map-wrapper>
-<div bind:this={mapElement}></div>
+  <div bind:this={mapElement}></div>
 </map-wrapper>
 
 <style>
