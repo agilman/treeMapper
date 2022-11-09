@@ -13,12 +13,13 @@
   let selectedGenus;
   let species = [];
   let selectedSpecies;
+  let radius=10;
   let commonName=''; 
   let wiki = '';
   
   onMount(async function () {
     leaflet = await import('leaflet');
-    
+
     const parkResponse = await fetch("http://localhost:8000/api/parks");
     const myParks = await parkResponse.json();
   
@@ -78,7 +79,7 @@
       color: 'green',
       fillColor: '#1f9520',
       fillOpacity: 0.5,
-      radius: 5
+      radius: radius
     }).addTo(map);
   };
   </script>
@@ -112,6 +113,11 @@
       </option>
   {/each}
 </select>
+<label for="radiusInput">Radius(meters):</label>
+<input type=number id="radiusInput" bind:value={radius} min=1 max=100>
+<button>
+  Save!
+</button>
 <p>{commonName}</p>
 <p>{wiki}</p>
 
