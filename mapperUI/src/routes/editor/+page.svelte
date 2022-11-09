@@ -1,6 +1,9 @@
 <script>
-  import { onMount } from 'svelte';
-  import LeafletMap from '$lib/LeafletMap.svelte';
+  import { onMount, onDestroy} from 'svelte';
+  import.meta.env.SSR
+
+  let mapElement;
+  let map;
   
   let parks = [];
   let selectedPark;
@@ -10,29 +13,39 @@
   let selectedSpecies;
   let commonName=''; 
   let wiki = '';
-  let props={mapCenter:[ 48.760000, -122.490773 ],mapZoom:18};
   
   onMount(async function () {
+    const leaflet = await import('leaflet');
     const parkResponse = await fetch("http://localhost:8000/api/parks");
     const myParks = await parkResponse.json();
   
     parks = myParks;
     if(parks.length){
       selectedPark=parks[0].id;
-      props.mapCenter=[parks[0].lat,parks[0].lng];
-      props.mapZoom=parks[0].zoom;
-      //props = {mapCenter:[parks[0].lat,parks[0].lng],mapZoom:parks[0].zoom};
-      console.log("setting init map", props)
+
+      map = leaflet.map(mapElement).setView([parks[0].lat,parks[0].lng], parks[0].zoom);
+      leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+      console.log("setting init map")
     }
   
     const generaResponse = await fetch("http://localhost:8000/api/genera");
     const myGenera = await generaResponse.json();
     genera = myGenera;
   });
+
+  onDestroy(async () => {
+        if(map) {
+            console.log('Unloading Leaflet map.');
+            map.remove();
+        }
+    });
   
   async function changePark(){
     console.log('changed park');
   };
+
   async function changeGenus(){
     const resp = await fetch("http://localhost:8000/api/species/"+selectedGenus);
     const mySpecies = await resp.json()
@@ -85,4 +98,13 @@
 <p>{commonName}</p>
 <p>{wiki}</p>
 
-<LeafletMap {...props}/>
+<map-wrapper>
+<div bind:this={mapElement}></div>
+</map-wrapper>
+
+<style>
+  @import 'leaflet/dist/leaflet.css';
+  map-wrapper div {
+      height: 400px;
+  }
+</style>
