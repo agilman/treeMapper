@@ -21,5 +21,6 @@ from mappingAPI import api
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/genera',api.genera),
-    path('api/species/<str:genus>', api.species)
+    path('api/species/<str:genus>', api.species),
+    path('api/parks', api.parks)
 ]

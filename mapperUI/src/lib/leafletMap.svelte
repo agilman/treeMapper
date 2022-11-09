@@ -1,24 +1,19 @@
 <script>
     import { onMount, onDestroy } from 'svelte';
-    import { browser } from '$app/environment';
+    import.meta.env.SSR
 
     let mapElement;
     let map;
 
     onMount(async () => {
-        if(browser) {
-            const leaflet = await import('leaflet');
 
-            map = leaflet.map(mapElement).setView([51.505, -0.09], 13);
+        const leaflet = await import('leaflet');
+        48.760002485861406, -122.49076485842225
+        map = leaflet.map(mapElement).setView([48.76000, -122.490773], 18);
 
-            leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-
-            leaflet.marker([51.5, -0.09]).addTo(map)
-                .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-                .openPopup();
-        }
+        leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
     });
 
     onDestroy(async () => {

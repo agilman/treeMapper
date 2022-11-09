@@ -6,6 +6,13 @@ from django.views.decorators.csrf import csrf_exempt
 from mappingAPI.serializers import *
 
 @csrf_exempt
+def parks(request):
+    if request.method == 'GET':
+        parks = Parks.objects.all()
+        serializedParks = ParksSerializer(parks, many=True).data
+        return JsonResponse(serializedParks, safe=False)
+
+@csrf_exempt
 def genera(request):
     if request.method == 'GET':
         genera = TreeSpecies.objects.filter().values("genus").distinct()

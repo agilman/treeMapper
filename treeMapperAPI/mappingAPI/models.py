@@ -8,7 +8,10 @@ class TreeSpecies(models.Model):
 
 class Parks(models.Model):
     name = models.CharField(max_length=32)
-
+    lat = models.DecimalField(max_digits=9, decimal_places=6)
+    lng = models.DecimalField(max_digits=9, decimal_places=6)
+    zoom = models.IntegerField()
+    
 class Trees(models.Model):
     species = models.ForeignKey(TreeSpecies,on_delete=models.CASCADE)
     park = models.ForeignKey(Parks,on_delete=models.DO_NOTHING)

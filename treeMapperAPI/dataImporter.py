@@ -6,11 +6,11 @@ django.setup()
 from mappingAPI import models
 
 
-myParks = ["Elizabeth"]
+myParks = [{'name':'Elizabeth','lat':'48.76000','lng':'-122.490773','zoom':18}]
 print("Adding parks:")
 for i in myParks:
     print(i)
-    newPark = models.Parks(name=i)
+    newPark = models.Parks(name=i['name'],lat=i['lat'],lng=i['lng'],zoom=i['zoom'])
     newPark.save()
 
 
