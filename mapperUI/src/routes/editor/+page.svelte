@@ -43,7 +43,11 @@
     });
   
   async function changePark(){
-    console.log('changed park');
+    for(let i=0;i<parks.length;i++){
+      if (parks[i].id == selectedPark){
+        map.flyTo([parks[i].lat,parks[i].lng],parks[i].zoom);
+      }
+    }
   };
 
   async function changeGenus(){

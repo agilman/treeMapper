@@ -5,8 +5,8 @@ django.setup()
 
 from mappingAPI import models
 
-
-myParks = [{'name':'Elizabeth','lat':'48.76000','lng':'-122.490773','zoom':18}]
+myParks = [{'name':'Elizabeth Park','lat':'48.76000','lng':'-122.490773','zoom':18},
+           {'name':'Memorial Park', 'lat':'48.76747','lng':'-122.462833','zoom':16}]
 print("Adding parks:")
 for i in myParks:
     print(i)
