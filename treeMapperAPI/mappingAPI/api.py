@@ -1,4 +1,5 @@
 from django.http import JsonResponse, HttpResponse
+from rest_framework.parsers import JSONParser
 
 from mappingAPI.models import *
 from django.views.decorators.csrf import csrf_exempt
@@ -28,3 +29,20 @@ def species(request, genus):
         species = TreeSpecies.objects.all().filter(genus=genus)
         serializedSpecies = SpeciesSerializer(species, many=True).data
         return JsonResponse(serializedSpecies,safe=False)
+
+@csrf_exempt
+def trees(request):
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+        parkId = data["park"]
+        speciesId = data["species"]
+        lat = data["lat"]
+        lng = data["lng"]
+        size = data["size"]
+
+        park = Parks.objects.get(id=parkId)
+        species = TreeSpecies.objects.get(id=speciesId)
+
+        newTree = Trees.objects.create(park=park,species=species,lat=lat,lng=lng,size=size)
+        serialized = TreesSerializer(newTree).data
+        return JsonResponse(serialized,safe=False)

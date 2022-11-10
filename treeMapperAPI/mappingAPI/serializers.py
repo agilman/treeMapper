@@ -10,3 +10,8 @@ class SpeciesSerializer(serializers.ModelSerializer):
     class Meta:
         model = TreeSpecies
         fields = '__all__'
+
+class TreesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trees
+        fields = '__all__'

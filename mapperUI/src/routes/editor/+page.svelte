@@ -16,6 +16,8 @@
   let radius=10;
   let commonName=''; 
   let wiki = '';
+  let newTreeCoords=[];
+  let newTreeLayer;
   
   onMount(async function () {
     leaflet = await import('leaflet');
@@ -32,6 +34,7 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
+      newTreeLayer = leaflet.layerGroup().addTo(map);
       map.on('click',mapClick);
     }
   
@@ -47,7 +50,7 @@
         }
     });
   
-  async function changePark(){
+  function changePark(){
     for(let i=0;i<parks.length;i++){
       if (parks[i].id == selectedPark){
         map.flyTo([parks[i].lat,parks[i].lng],parks[i].zoom);
@@ -75,12 +78,25 @@
 
   function mapClick(e){
     const mylatlng = [e.latlng['lat'],e.latlng['lng']];
+    newTreeCoords = mylatlng;
+    newTreeLayer.clearLayers();
     var circle = leaflet.circle(mylatlng, {
       color: 'green',
       fillColor: '#1f9520',
       fillOpacity: 0.5,
       radius: radius
-    }).addTo(map);
+    }).addTo(newTreeLayer);
+  };
+  async function saveClick(){
+    const data  = {park:selectedPark,
+    species:selectedSpecies,
+    lat: newTreeCoords[0],
+    lng: newTreeCoords[1],
+    size: radius};
+
+    const res = await fetch('http://localhost:8000/api/trees', {
+			method: 'POST',
+			body: JSON.stringify(data)});
   };
   </script>
 
@@ -115,7 +131,7 @@
 </select>
 <label for="radiusInput">Radius(meters):</label>
 <input type=number id="radiusInput" bind:value={radius} min=1 max=100>
-<button>
+<button on:click={saveClick}>
   Save!
 </button>
 <p>{commonName}</p>

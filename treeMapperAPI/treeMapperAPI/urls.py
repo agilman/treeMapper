@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/genera',api.genera),
     path('api/species/<str:genus>', api.species),
-    path('api/parks', api.parks)
+    path('api/parks', api.parks),
+    path('api/trees',api.trees)
 ]
