@@ -2,21 +2,19 @@
   import { onMount, onDestroy} from 'svelte';
   import.meta.env.SSR
 
-  let leaflet;
-
-  let mapElement;
+  let leaflet; // All leaflet types: map, circle, groupLayer etc
+  let mapElement; //Binds to the <div> containing the map
   let map;
   
   let parks = [];
   let selectedPark;
   let genera = [] ;
-  let selectedGenus;
+  let selectedGenus='';
   let species = [];
-  let selectedSpecies;
+  let selectedSpecies='';
   let parkTrees = [];
   let radius=10;
   let commonName=''; 
-  let wiki = '';
   let newTreeCoords=[];
   let newTreeLayer;
   let parkTreesLayer;
@@ -80,29 +78,33 @@
     species = mySpecies;
     selectedSpecies='';
     commonName = '';
-    wiki = '';
   };
   
+  //commonName not displayed, this is not needed...
   function changeSpecies(){
    for (let i=0; i<species.length; i++){
     if (species[i].id === selectedSpecies){
         commonName = species[i].commonName;
-        wiki = species[i].wiki;
       }
     }
   };
 
-  function mapClick(e){
-    const mylatlng = [e.latlng['lat'],e.latlng['lng']];
-    newTreeCoords = mylatlng;
+  function redrawNewTree(){
     newTreeLayer.clearLayers();
-    var circle = leaflet.circle(mylatlng, {
+    var circle = leaflet.circle(newTreeCoords, {
       color: 'green',
       fillColor: '#1f9520',
       fillOpacity: 0.5,
       radius: radius
     }).addTo(newTreeLayer);
+    
+  }
+  function mapClick(e){
+    const mylatlng = [e.latlng['lat'],e.latlng['lng']];
+    newTreeCoords = mylatlng;
+    redrawNewTree();
   };
+
   async function saveClick(){
     const data  = {park:selectedPark,
     species:selectedSpecies,
@@ -117,9 +119,12 @@
     parkTrees.push(myTree);
     newTreeLayer.clearLayers();
     drawParkTrees();
-
   };
-  </script>
+
+  async function radiusChange(){
+    redrawNewTree();
+  };
+</script>
 
 <h3>Hello, Welcome to Tree Mapper!</h3>
 <label for="parks">Parks:</label>
@@ -134,7 +139,7 @@
 <br>
 
 <select name="genera" bind:value={selectedGenus} on:change={changeGenus}>
-    <option selected disabled>Please select </option>
+    <option value='' selected disabled>Please select</option>
     {#each genera as genus}
         <option value={genus}>
             {genus}
@@ -143,7 +148,7 @@
 </select>
 
 <select name="species" bind:value={selectedSpecies} on:change={changeSpecies}>
-  <option selected disabled>Please select </option>
+  <option value='' disabled selected>Please select</option>
   {#each species as specie}
       <option value={specie.id}>
           {specie.species}
@@ -151,7 +156,7 @@
   {/each}
 </select>
 <label for="radiusInput">Radius(meters):</label>
-<input type=number id="radiusInput" bind:value={radius} min=1 max=100>
+<input type=number id="radiusInput" bind:value={radius} on:change={radiusChange} min=1 max=100>
 <button on:click={saveClick}>
   Save!
 </button>
