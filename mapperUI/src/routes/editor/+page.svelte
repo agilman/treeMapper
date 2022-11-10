@@ -13,11 +13,13 @@
   let selectedGenus;
   let species = [];
   let selectedSpecies;
+  let parkTrees = [];
   let radius=10;
   let commonName=''; 
   let wiki = '';
   let newTreeCoords=[];
   let newTreeLayer;
+  let parkTreesLayer;
   
   onMount(async function () {
     leaflet = await import('leaflet');
@@ -35,7 +37,12 @@
         }).addTo(map);
 
       newTreeLayer = leaflet.layerGroup().addTo(map);
+      parkTreesLayer = leaflet.layerGroup().addTo(map);
       map.on('click',mapClick);
+
+      const resp = await fetch("http://localhost:8000/api/trees/"+selectedPark);
+      parkTrees = await resp.json();
+      drawParkTrees();
     }
   
     const generaResponse = await fetch("http://localhost:8000/api/genera");
@@ -50,12 +57,21 @@
         }
     });
   
+  async function drawParkTrees(){
+    parkTreesLayer.clearLayers();
+
+    for(let i=0;i<parkTrees.length;i++){
+      const myLatLng = [parkTrees[i].lat,parkTrees[i].lng];
+      leaflet.circle(myLatLng,{radius:parkTrees[i].size}).addTo(parkTreesLayer);
+    }
+  };
   function changePark(){
     for(let i=0;i<parks.length;i++){
       if (parks[i].id == selectedPark){
         map.flyTo([parks[i].lat,parks[i].lng],parks[i].zoom);
       }
     }
+    // drawParkTrees (no need, the function draws all the trees from all parks..)
   };
 
   async function changeGenus(){
@@ -97,6 +113,11 @@
     const res = await fetch('http://localhost:8000/api/trees', {
 			method: 'POST',
 			body: JSON.stringify(data)});
+    const myTree = await res.json()
+    parkTrees.push(myTree);
+    newTreeLayer.clearLayers();
+    drawParkTrees();
+
   };
   </script>
 
@@ -134,8 +155,6 @@
 <button on:click={saveClick}>
   Save!
 </button>
-<p>{commonName}</p>
-<p>{wiki}</p>
 
 <map-wrapper>
   <div bind:this={mapElement}></div>

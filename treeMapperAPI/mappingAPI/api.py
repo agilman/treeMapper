@@ -31,7 +31,12 @@ def species(request, genus):
         return JsonResponse(serializedSpecies,safe=False)
 
 @csrf_exempt
-def trees(request):
+def trees(request,parkId=None):
+    if request.method == 'GET':
+        data = Trees.objects.all()
+        myTrees = TreesSerializer(data, many=True).data
+        return JsonResponse(myTrees, safe=False)
+    
     if request.method == 'POST':
         data = JSONParser().parse(request)
         parkId = data["park"]
