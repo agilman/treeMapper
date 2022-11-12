@@ -18,6 +18,7 @@
   let newTreeCoords=[];
   let newTreeLayer;
   let parkTreesLayer;
+  let disabled = true;
   
   onMount(async function () {
     leaflet = await import('leaflet');
@@ -78,6 +79,7 @@
     species = mySpecies;
     selectedSpecies='';
     commonName = '';
+    disabled= true;
   };
   
   //commonName not displayed, this is not needed...
@@ -86,6 +88,11 @@
     if (species[i].id === selectedSpecies){
         commonName = species[i].commonName;
       }
+    }
+    if(newTreeCoords.length){
+      disabled = false;
+    }else{
+      disabled = true;
     }
   };
 
@@ -103,6 +110,9 @@
     const mylatlng = [e.latlng['lat'],e.latlng['lng']];
     newTreeCoords = mylatlng;
     redrawNewTree();
+    if (selectedSpecies){
+      disabled = false;
+    }
   };
 
   async function saveClick(){
@@ -124,6 +134,7 @@
   async function radiusChange(){
     redrawNewTree();
   };
+
 </script>
 
 <h3>Hello, Welcome to Tree Mapper!</h3>
@@ -157,7 +168,7 @@
 </select>
 <label for="radiusInput">Radius(meters):</label>
 <input type=number id="radiusInput" bind:value={radius} on:change={radiusChange} min=1 max=100>
-<button on:click={saveClick}>
+<button {disabled} on:click={saveClick}>
   Save!
 </button>
 
