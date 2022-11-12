@@ -2,7 +2,7 @@
   import { onMount, onDestroy} from 'svelte';
   import.meta.env.SSR
 
-  let leaflet; // All leaflet types: map, circle, groupLayer etc
+  let leaflet; // L : All leaflet types: map, circle, groupLayer etc
   let mapElement; //Binds to the <div> containing the map
   let map;
   
@@ -60,8 +60,13 @@
 
     for(let i=0;i<parkTrees.length;i++){
       const myLatLng = [parkTrees[i].lat,parkTrees[i].lng];
-      leaflet.circle(myLatLng,{radius:parkTrees[i].size}).addTo(parkTreesLayer);
+      leaflet.circle(myLatLng,{
+        radius:parkTrees[i].size
+      }).addTo(parkTreesLayer).on("click",treeClick);
     }
+  };
+  function treeClick(e){
+    leaflet.DomEvent.stopPropagation(e);	
   };
   function changePark(){
     for(let i=0;i<parks.length;i++){
