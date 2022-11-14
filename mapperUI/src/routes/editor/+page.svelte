@@ -18,6 +18,9 @@
   let newTreeCoords=[];
   let newTreeLayer;
   let parkTreesLayer;
+  let selectedTreeLayer;
+  let selectedTreeIndex=-1;
+  let newNote = '';
   
   onMount(async function () {
     leaflet = await import('leaflet');
@@ -36,6 +39,7 @@
 
       newTreeLayer = leaflet.layerGroup().addTo(map);
       parkTreesLayer = leaflet.layerGroup().addTo(map);
+      selectedTreeLayer = leaflet.layerGroup().addTo(map);
       map.on('click',mapClick);
 
       const resp = await fetch("http://localhost:8000/api/trees/"+selectedPark);
@@ -60,13 +64,33 @@
 
     for(let i=0;i<parkTrees.length;i++){
       const myLatLng = [parkTrees[i].lat,parkTrees[i].lng];
-      leaflet.circle(myLatLng,{
+      const myCircle = leaflet.circle(myLatLng,{
         radius:parkTrees[i].size
-      }).addTo(parkTreesLayer).on("click",treeClick);
+      })
+      myCircle.treeId=parkTrees[i].id;
+      myCircle.addTo(parkTreesLayer).on("click",treeClick);
     }
   };
+
   function treeClick(e){
-    leaflet.DomEvent.stopPropagation(e);	
+    leaflet.DomEvent.stopPropagation(e);
+    selectedTreeLayer.clearLayers();
+    
+    for(let i=0;i<parkTrees.length;i++){
+      if (parkTrees[i].id == e.sourceTarget.treeId){
+        selectedTreeIndex = i;
+
+        const myLatLng = [parkTrees[i].lat,parkTrees[i].lng];
+        const myCircle = leaflet.circle(myLatLng,{
+          radius:parkTrees[i].size,
+          color:'red'
+         });
+        myCircle.treeId=parkTrees[i].id;
+        myCircle.addTo(selectedTreeLayer);
+
+        map.panTo(myLatLng);
+      }
+    };
   };
   function changePark(){
     for(let i=0;i<parks.length;i++){
@@ -102,8 +126,8 @@
       fillOpacity: 0.5,
       radius: radius
     }).addTo(newTreeLayer);
-    
-  }
+  };
+  
   function mapClick(e){
     const mylatlng = [e.latlng['lat'],e.latlng['lng']];
     newTreeCoords = mylatlng;
@@ -124,6 +148,7 @@
     parkTrees.push(myTree);
     newTreeLayer.clearLayers();
     drawParkTrees();
+    newTreeCoords=[];
   };
 
   async function radiusChange(){
@@ -162,17 +187,27 @@
 </select>
 <label for="radiusInput">Radius(meters):</label>
 <input type=number id="radiusInput" bind:value={radius} on:change={radiusChange} min=1 max=100>
-<button disabled={!newTreeCoords.length || !selectedSpecies} on:click={saveClick}>
+<button disabled={!newTreeCoords.length || !selectedSpecies} on:click={saveClick} class="m-1 bg-blue-300 rounded p-1 border border-gray-400 disabled:bg-gray-300">
   Save!
 </button>
-
-<map-wrapper>
-  <div bind:this={mapElement}></div>
-</map-wrapper>
+<div class="flex items-start">
+  <map-wrapper class="flex w-3/4">
+    <div bind:this={mapElement} class="flex-auto" style="height:400px"></div>
+  </map-wrapper>
+  <div class="flex-col items-start">
+   {#if selectedTreeIndex > -1}
+    <h2><u><b>{parkTrees[selectedTreeIndex].species.commonName}</b></u></h2>
+      {parkTrees[selectedTreeIndex].species.genus}  {parkTrees[selectedTreeIndex].species.species}
+      <br>
+      {parkTrees[selectedTreeIndex].species.wiki}
+      <br>
+      <label for="notes">Notes:</label>
+      <input type="text" id="notes" class="border border-grey-400" bind:value={newNote}>
+      <button disabled={!newNote.length} class="m-1 bg-blue-300 rounded p-1 border border-grey-400 disabled:bg-gray-300">Save notes</button>
+    {/if}
+  </div>
+</div>
 
 <style>
   @import 'leaflet/dist/leaflet.css';
-  map-wrapper div {
-      height: 400px;
-  }
 </style>

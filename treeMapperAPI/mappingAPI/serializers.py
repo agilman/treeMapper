@@ -12,6 +12,7 @@ class SpeciesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TreesSerializer(serializers.ModelSerializer):
+    species = SpeciesSerializer()
     class Meta:
         model = Trees
-        fields = '__all__'
+        fields = ('id','park','lat','lng','size','species')
