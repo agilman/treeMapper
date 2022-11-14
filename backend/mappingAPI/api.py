@@ -5,6 +5,7 @@ from mappingAPI.models import *
 from django.views.decorators.csrf import csrf_exempt
 
 from mappingAPI.serializers import *
+import datetime
 
 @csrf_exempt
 def parks(request):
@@ -51,3 +52,24 @@ def trees(request,parkId=None):
         newTree = Trees.objects.create(park=park,species=species,lat=lat,lng=lng,size=size)
         serialized = TreesSerializer(newTree).data
         return JsonResponse(serialized,safe=False)
+
+
+@csrf_exempt
+def notes(request,treeId=None):
+    if request.method=='GET':
+        data = TreeNotes.objects.filter(tree=treeId)
+        myNotes = NotesSerializer(data, many=True).data
+        return JsonResponse(myNotes, safe=False)
+    if request.method=='POST':
+        data = JSONParser().parse(request)
+        treeId = data["tree"]
+        text = data["text"]
+
+        now = datetime.datetime.now()
+
+        tree = Trees.objects.get(id=treeId)
+
+        newNote = TreeNotes.objects.create(tree=tree,ts=now,text=text)
+        serialized = NotesSerializer(newNote).data
+        return JsonResponse(serialized,safe=False)
+

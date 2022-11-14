@@ -20,6 +20,7 @@
   let parkTreesLayer;
   let selectedTreeLayer;
   let selectedTreeIndex=-1;
+  let notes = [];
   let newNote = '';
   
   onMount(async function () {
@@ -134,7 +135,7 @@
     redrawNewTree();
   };
 
-  async function saveClick(){
+  async function saveTreeClick(){
     const data  = {park:selectedPark,
     species:selectedSpecies,
     lat: newTreeCoords[0],
@@ -153,6 +154,20 @@
 
   async function radiusChange(){
     redrawNewTree();
+  };
+
+  async function saveNoteClick(){
+    const myTree = parkTrees[selectedTreeIndex].id;
+    const data  = {tree:myTree, text: newNote};
+
+    const res = await fetch('http://localhost:8000/api/notes/'+myTree, {
+			method: 'POST',
+			body: JSON.stringify(data)});
+    const myNote = await res.json()
+    console.log("saved note:", myNote)
+    notes.push(myNote);
+
+    newNote = '';
   };
 </script>
 
@@ -187,7 +202,7 @@
 </select>
 <label for="radiusInput">Radius(meters):</label>
 <input type=number id="radiusInput" bind:value={radius} on:change={radiusChange} min=1 max=100>
-<button disabled={!newTreeCoords.length || !selectedSpecies} on:click={saveClick} class="m-1 bg-blue-300 rounded p-1 border border-gray-400 disabled:bg-gray-300">
+<button disabled={!newTreeCoords.length || !selectedSpecies} on:click={saveTreeClick} class="m-1 bg-blue-300 rounded p-1 border border-gray-400 disabled:bg-gray-300">
   Save!
 </button>
 <div class="flex items-start">
@@ -203,7 +218,13 @@
       <br>
       <label for="notes">Notes:</label>
       <input type="text" id="notes" class="border border-grey-400" bind:value={newNote}>
-      <button disabled={!newNote.length} class="m-1 bg-blue-300 rounded p-1 border border-grey-400 disabled:bg-gray-300">Save notes</button>
+      <button disabled={!newNote.length}
+       on:click={saveNoteClick}
+       class="m-1 bg-blue-300 rounded p-1 border border-grey-400 disabled:bg-gray-300">Save notes</button>
+       <br>
+       <div>
+        {notes}
+       </div>
     {/if}
   </div>
 </div>

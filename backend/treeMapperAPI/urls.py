@@ -24,5 +24,6 @@ urlpatterns = [
     path('api/species/<str:genus>', api.species),
     path('api/parks', api.parks),
     path('api/trees',api.trees),
-    path('api/trees/<int:parkId>',api.trees)
+    path('api/trees/<int:parkId>',api.trees),
+    path('api/notes/<int:treeId>',api.notes)
 ]
