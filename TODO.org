@@ -1,4 +1,4 @@
-* UI list [/] *
-    [ ]  Clickable tree circles
-    [ ]  Disable 'save' button until ready
+* UI list [ / ] *
+    [x]  Clickable tree circles
+    [x]  Disable 'save' button until ready
     [ ]  Add Note taking area 
