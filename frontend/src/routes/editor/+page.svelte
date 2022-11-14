@@ -14,7 +14,6 @@
   let selectedSpecies='';
   let parkTrees = [];
   let radius=10;
-  let commonName=''; 
   let newTreeCoords=[];
   let newTreeLayer;
   let parkTreesLayer;
@@ -73,8 +72,12 @@
     }
   };
 
-  function treeClick(e){
-    leaflet.DomEvent.stopPropagation(e);
+  async function treeClick(e){
+    //This function is called when an established tree has been selected.:
+    //  -highlight the tree on the map, center the map on it.
+    //  -display tree info in side panel
+
+    leaflet.DomEvent.stopPropagation(e); // prevent map from getting click event and drawing a new tree
     selectedTreeLayer.clearLayers();
     
     for(let i=0;i<parkTrees.length;i++){
@@ -92,7 +95,14 @@
         map.panTo(myLatLng);
       }
     };
+
+    //get notes
+    const res = await fetch("http://localhost:8000/api/notes/"+parkTrees[selectedTreeIndex].id);
+    const myNotes = await res.json();
+    
+    notes = myNotes;
   };
+
   function changePark(){
     for(let i=0;i<parks.length;i++){
       if (parks[i].id == selectedPark){
@@ -107,16 +117,6 @@
     const mySpecies = await resp.json()
     species = mySpecies;
     selectedSpecies='';
-    commonName = '';
-  };
-  
-  //commonName not displayed, this is not needed...
-  function changeSpecies(){
-   for (let i=0; i<species.length; i++){
-    if (species[i].id === selectedSpecies){
-        commonName = species[i].commonName;
-      }
-    }
   };
 
   function redrawNewTree(){
@@ -163,10 +163,9 @@
     const res = await fetch('http://localhost:8000/api/notes/'+myTree, {
 			method: 'POST',
 			body: JSON.stringify(data)});
-    const myNote = await res.json()
-    console.log("saved note:", myNote)
+    const myNote = await res.json();
     notes.push(myNote);
-
+    notes = notes;
     newNote = '';
   };
 </script>
@@ -192,7 +191,7 @@
     {/each}
 </select>
 
-<select name="species" bind:value={selectedSpecies} on:change={changeSpecies}>
+<select name="species" bind:value={selectedSpecies}>
   <option value='' disabled selected>Please select</option>
   {#each species as specie}
       <option value={specie.id}>
@@ -216,14 +215,19 @@
       <br>
       {parkTrees[selectedTreeIndex].species.wiki}
       <br>
-      <label for="notes">Notes:</label>
-      <input type="text" id="notes" class="border border-grey-400" bind:value={newNote}>
+      <label for="treeNotes">Add a Note:</label>
+      <input type="text" id="treeNotes" class="border border-grey-400" bind:value={newNote}>
       <button disabled={!newNote.length}
        on:click={saveNoteClick}
        class="m-1 bg-blue-300 rounded p-1 border border-grey-400 disabled:bg-gray-300">Save notes</button>
        <br>
        <div>
-        {notes}
+        {#each notes as note}
+        <div>
+          {note.ts} - {note.text}
+          <br>
+        </div>
+        {/each}
        </div>
     {/if}
   </div>
