@@ -148,6 +148,7 @@
     selectedTreeIndex = -1;
     selectedTreeLayer.clearLayers();
     notes = [];
+    newNote = '';
   };
 
   async function saveTreeClick(){
@@ -223,8 +224,8 @@
 </div>
 
 <div class="flex items-start mt-2">
-  <map-wrapper class="flex w-3/4">
-    <div bind:this={mapElement} class="flex-auto" style="height:400px"></div>
+  <map-wrapper class="w-3/4">
+    <div bind:this={mapElement} class="w-full h-full" style="height:500px"></div>
   </map-wrapper>
   <div class="flex-col w-1/4 items-start">
     {#if selectedTreeIndex > -1}
@@ -234,10 +235,10 @@
       </a> 
       <br>
       <label for="treeNotes">Note:</label>
-      <input type="text" maxlength="128" id="treeNotes" class="border border-grey-400" bind:value={newNote}>
-      <button disabled={!newNote.length}
-      on:click={saveNoteClick}
-      class="m-1 bg-blue-300 rounded p-1 border border-grey-400 disabled:bg-gray-300">Save notes</button>
+      <input type="text" maxlength="128" id="treeNotes" bind:value={newNote} class="rounded-lg border border-grey-400 m-2 p-1" >
+      <button disabled={!newNote.length} on:click={saveNoteClick}
+      class="m-2 p-2 bg-blue-300 rounded border border-grey-400 disabled:bg-gray-300">
+      Save note</button>
       <br>
       <div>
       {#each notes as note}
