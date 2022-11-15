@@ -188,66 +188,65 @@
     return moment(myTs).format('MM/DD/YYYY h:mmA');
   };
 </script>
-
-<h3>Hello, Welcome to Tree Mapper!</h3>
-<label for="parks">Parks:</label>
-
-<select name="parks" id="parks" bind:value={selectedPark} on:change={changePark}>
-  {#each parks as park}
-    <option value={park.id}>
-      {park.name}
-    </option>
-  {/each}
-</select> 
-<br>
-
-<select name="genera" bind:value={selectedGenus} on:change={changeGenus}>
+<div class="flex-row">
+  <select name="parks" id="parks" bind:value={selectedPark} on:change={changePark} class="rounded-lg border mx-3 mt-1 p-2">
+    {#each parks as park}
+      <option value={park.id}>
+        {park.name}
+      </option>
+    {/each}
+  </select>
+  <label for="mygeneras">
+    New Tree:
+  </label>
+  <select name="genera" bind:value={selectedGenus} on:change={changeGenus} id="mygeneras" class="rounded-lg border mx-2 p-2">
     <option value='' selected disabled>Please select</option>
     {#each genera as genus}
-        <option value={genus}>
-            {genus}
+      <option value={genus}>
+          {genus}
+      </option>
+    {/each}
+  </select>
+  <select name="species" bind:value={selectedSpecies} class="rounded-lg mx-2 p-2">
+    <option value='' disabled selected>Please select</option>
+    {#each species as specie}
+        <option value={specie.id}>
+            {specie.species}
         </option>
     {/each}
-</select>
+  </select>
+  <label for="radiusInput">Radius(meters):</label>
+  <input onKeyDown="return false" size="4" type=number id="radiusInput" bind:value={radius} on:change={radiusChange} min=1 max=50 class="border rounded-lg mx-2 p-2">
+  <button disabled={!newTreeCoords.length || !selectedSpecies} on:click={saveTreeClick} class="mx-2 p-2 bg-blue-300 rounded p-1 border border-gray-400 disabled:bg-gray-300">
+    Save!
+  </button>
+</div>
 
-<select name="species" bind:value={selectedSpecies}>
-  <option value='' disabled selected>Please select</option>
-  {#each species as specie}
-      <option value={specie.id}>
-          {specie.species}
-      </option>
-  {/each}
-</select>
-<label for="radiusInput">Radius(meters):</label>
-<input onKeyDown="return false" type=number id="radiusInput" bind:value={radius} on:change={radiusChange} min=1 max=50>
-<button disabled={!newTreeCoords.length || !selectedSpecies} on:click={saveTreeClick} class="m-1 bg-blue-300 rounded p-1 border border-gray-400 disabled:bg-gray-300">
-  Save!
-</button>
-<div class="flex items-start">
+<div class="flex items-start mt-2">
   <map-wrapper class="flex w-3/4">
     <div bind:this={mapElement} class="flex-auto" style="height:400px"></div>
   </map-wrapper>
-  <div class="flex-col items-start">
-   {#if selectedTreeIndex > -1}
-    <h2><u><b>{parkTrees[selectedTreeIndex].species.commonName}</b></u></h2>
-      {parkTrees[selectedTreeIndex].species.genus}  {parkTrees[selectedTreeIndex].species.species}
+  <div class="flex-col w-1/4 items-start">
+    {#if selectedTreeIndex > -1}
+      <u><b>{parkTrees[selectedTreeIndex].species.commonName}</b></u> - 
+      <a href="{parkTrees[selectedTreeIndex].species.wiki}">
+        {parkTrees[selectedTreeIndex].species.genus}  {parkTrees[selectedTreeIndex].species.species}
+      </a> 
       <br>
-      {parkTrees[selectedTreeIndex].species.wiki}
-      <br>
-      <label for="treeNotes">Add a Note:</label>
-      <input type="text" id="treeNotes" class="border border-grey-400" bind:value={newNote}>
+      <label for="treeNotes">Note:</label>
+      <input type="text" maxlength="128" id="treeNotes" class="border border-grey-400" bind:value={newNote}>
       <button disabled={!newNote.length}
-       on:click={saveNoteClick}
-       class="m-1 bg-blue-300 rounded p-1 border border-grey-400 disabled:bg-gray-300">Save notes</button>
-       <br>
-       <div>
-        {#each notes as note}
+      on:click={saveNoteClick}
+      class="m-1 bg-blue-300 rounded p-1 border border-grey-400 disabled:bg-gray-300">Save notes</button>
+      <br>
+      <div>
+      {#each notes as note}
         <div>
-          {convertTimeStamp(note.ts)} - {note.text}
-          <br>
+        {convertTimeStamp(note.ts)} - <p>{note.text}</p>
+        <br>
         </div>
-        {/each}
-       </div>
+      {/each}
+      </div>
     {/if}
   </div>
 </div>
