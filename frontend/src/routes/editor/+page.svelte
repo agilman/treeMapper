@@ -97,7 +97,10 @@
 
         map.panTo(myLatLng);
       }
-    };
+    } //end for
+    
+    newTreeCoords = [];
+    newTreeLayer.clearLayers();
 
     //get notes
     const res = await fetch(url+"/api/notes/"+parkTrees[selectedTreeIndex].id);
@@ -113,6 +116,11 @@
       }
     }
     // drawParkTrees (no need, the function draws all the trees from all parks..)
+    selectedTreeIndex = -1;
+    notes= [];
+    newTreeCoords=[];
+    newTreeLayer.clearLayers();
+    selectedTreeLayer.clearLayers();
   };
 
   async function changeGenus(){
@@ -136,6 +144,10 @@
     const mylatlng = [e.latlng['lat'],e.latlng['lng']];
     newTreeCoords = mylatlng;
     redrawNewTree();
+
+    selectedTreeIndex = -1;
+    selectedTreeLayer.clearLayers();
+    notes = [];
   };
 
   async function saveTreeClick(){
