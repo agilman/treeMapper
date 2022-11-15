@@ -18,7 +18,7 @@ def parks(request):
 @csrf_exempt
 def genera(request):
     if request.method == 'GET':
-        genera = TreeSpecies.objects.filter().values("genus").distinct()
+        genera = TreeSpecies.objects.filter().values("genus").distinct().order_by("genus")
         myGenera = [] 
         for i in genera:
             myGenera.append(i['genus'])
@@ -28,7 +28,7 @@ def genera(request):
 @csrf_exempt
 def species(request, genus):
     if request.method == 'GET':
-        species = TreeSpecies.objects.all().filter(genus=genus)
+        species = TreeSpecies.objects.all().filter(genus=genus).order_by("species")
         serializedSpecies = SpeciesSerializer(species, many=True).data
         return JsonResponse(serializedSpecies,safe=False)
 
