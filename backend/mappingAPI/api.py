@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from mappingAPI.serializers import *
 import datetime
+import pytz
 
 @csrf_exempt
 def parks(request):
@@ -65,7 +66,8 @@ def notes(request,treeId=None):
         treeId = data["tree"]
         text = data["text"]
 
-        now = datetime.datetime.now()
+        tzinfo = pytz.timezone('US/Pacific')
+        now = datetime.datetime.now(tzinfo)
 
         tree = Trees.objects.get(id=treeId)
 

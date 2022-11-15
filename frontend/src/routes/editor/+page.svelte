@@ -1,6 +1,7 @@
 <script>
   import { onMount, onDestroy} from 'svelte';
-  import.meta.env.SSR
+  import.meta.env.SSR ; 
+  import moment from 'moment';
 
   let leaflet; // L : All leaflet types: map, circle, groupLayer etc
   let mapElement; //Binds to the <div> containing the map
@@ -168,6 +169,10 @@
     notes = notes;
     newNote = '';
   };
+  
+  function convertTimeStamp(myTs){
+    return moment(myTs).format('MM/DD/YYYY h:mmA');
+  };
 </script>
 
 <h3>Hello, Welcome to Tree Mapper!</h3>
@@ -224,7 +229,7 @@
        <div>
         {#each notes as note}
         <div>
-          {note.ts} - {note.text}
+          {convertTimeStamp(note.ts)} - {note.text}
           <br>
         </div>
         {/each}
