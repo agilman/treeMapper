@@ -169,7 +169,7 @@
     notes = notes;
     newNote = '';
   };
-  
+
   function convertTimeStamp(myTs){
     return moment(myTs).format('MM/DD/YYYY h:mmA');
   };
@@ -205,7 +205,7 @@
   {/each}
 </select>
 <label for="radiusInput">Radius(meters):</label>
-<input type=number id="radiusInput" bind:value={radius} on:change={radiusChange} min=1 max=100>
+<input onKeyDown="return false" type=number id="radiusInput" bind:value={radius} on:change={radiusChange} min=1 max=50>
 <button disabled={!newTreeCoords.length || !selectedSpecies} on:click={saveTreeClick} class="m-1 bg-blue-300 rounded p-1 border border-gray-400 disabled:bg-gray-300">
   Save!
 </button>
