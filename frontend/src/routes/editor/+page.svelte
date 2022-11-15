@@ -3,6 +3,8 @@
   import.meta.env.SSR ; 
   import moment from 'moment';
 
+  let url = 'http://localhost:8000';
+
   let leaflet; // L : All leaflet types: map, circle, groupLayer etc
   let mapElement; //Binds to the <div> containing the map
   let map;
@@ -26,7 +28,7 @@
   onMount(async function () {
     leaflet = await import('leaflet');
 
-    const parkResponse = await fetch("http://localhost:8000/api/parks");
+    const parkResponse = await fetch(url+"/api/parks");
     const myParks = await parkResponse.json();
   
     parks = myParks;
@@ -43,12 +45,12 @@
       selectedTreeLayer = leaflet.layerGroup().addTo(map);
       map.on('click',mapClick);
 
-      const resp = await fetch("http://localhost:8000/api/trees/"+selectedPark);
+      const resp = await fetch(url+"/api/trees/"+selectedPark);
       parkTrees = await resp.json();
       drawParkTrees();
     }
   
-    const generaResponse = await fetch("http://localhost:8000/api/genera");
+    const generaResponse = await fetch(url+"/api/genera");
     const myGenera = await generaResponse.json();
     genera = myGenera;
   });
@@ -98,7 +100,7 @@
     };
 
     //get notes
-    const res = await fetch("http://localhost:8000/api/notes/"+parkTrees[selectedTreeIndex].id);
+    const res = await fetch(url+"/api/notes/"+parkTrees[selectedTreeIndex].id);
     const myNotes = await res.json();
     
     notes = myNotes;
@@ -114,7 +116,7 @@
   };
 
   async function changeGenus(){
-    const resp = await fetch("http://localhost:8000/api/species/"+selectedGenus);
+    const resp = await fetch(url+"/api/species/"+selectedGenus);
     const mySpecies = await resp.json()
     species = mySpecies;
     selectedSpecies='';
@@ -143,7 +145,7 @@
     lng: newTreeCoords[1],
     size: radius};
 
-    const res = await fetch('http://localhost:8000/api/trees', {
+    const res = await fetch(url+'/api/trees', {
 			method: 'POST',
 			body: JSON.stringify(data)});
     const myTree = await res.json()
@@ -161,7 +163,7 @@
     const myTree = parkTrees[selectedTreeIndex].id;
     const data  = {tree:myTree, text: newNote};
 
-    const res = await fetch('http://localhost:8000/api/notes/'+myTree, {
+    const res = await fetch(url+'/api/notes/'+myTree, {
 			method: 'POST',
 			body: JSON.stringify(data)});
     const myNote = await res.json();
