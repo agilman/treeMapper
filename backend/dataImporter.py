@@ -8,7 +8,7 @@ from mappingAPI import models
 myParks = [{'name':'Elizabeth Park','lat':'48.76000','lng':'-122.490773','zoom':18},
            {'name':'Memorial Park', 'lat':'48.76747','lng':'-122.462833','zoom':16},
            {'name':'Broadway Park','lat':'48.765189','lng':'-122.476687','zoom':17},
-           {'name':'Laurel Park','lat':'48.7427511','lng':'-122.478471','zoom':18},
+           {'name':'Laurel Park','lat':'48.742631','lng':'-122.478484','zoom':18},
            {'name':'Boulevard Park','lat':'48.73209','lng':'-122.5021313','zoom':17}]
         
 
@@ -17,7 +17,6 @@ for i in myParks:
     print(i)
     newPark = models.Parks(name=i['name'],lat=i['lat'],lng=i['lng'],zoom=i['zoom'])
     newPark.save()
-
 
 print("\nAdding Trees:")
 
@@ -28,8 +27,8 @@ trees = [{'genus':'Acer','species':'campestre','commonName':'Field Maple','wiki'
          {'genus':'Acer','species':'macrophyllum','commonName':'Bigleaf Maple','wiki':'https://en.wikipedia.org/wiki/Acer_macrophyllum'},
          {'genus':'Arbutus','species':'menziesii','commonName':'Madrone','wiki':'https://en.wikipedia.org/wiki/Arbutus_menziesii'},
          {'genus':'Cedrus','species':'deodara','commonName':'Deodar Cedar','wiki':'https://en.wikipedia.org/wiki/Cedrus_deodara'},
-         {'genus':'Cornus','species':'mas','commonName':'Cornelian Cherry','wiki':'https://en.wikipedia.org/wiki/Cornus_mas'},
          {'genus':'Cornus','species':'florida','commonName':'Flowering Dogwood','wiki':'https://en.wikipedia.org/wiki/Cornus_florida'},
+         {'genus':'Cornus','species':'mas','commonName':'Cornelian Cherry','wiki':'https://en.wikipedia.org/wiki/Cornus_mas'},
          {'genus':'Fagus','species':'sylvatica','commonName':'European Beech','wiki':'https://en.wikipedia.org/wiki/Fagus_sylvatica'},
          {'genus':'Fraxinus','species':'americana','commonName':'White Ash','wiki':'https://en.wikipedia.org/wiki/Fraxinus_americana'},
          {'genus':'Ginkgo','species':'biloba','commonName':'Ginkgo','wiki':'https://en.wikipedia.org/wiki/Ginkgo_biloba'},
@@ -42,6 +41,8 @@ trees = [{'genus':'Acer','species':'campestre','commonName':'Field Maple','wiki'
          {'genus':'Quercus','species':'coccinea','commonName':'English Oak','wiki':'https://en.wikipedia.org/wiki/Quercus_coccinea'},
          {'genus':'Pseudotsuga','species':'menziesii','commonName':'Douglas Fir','wiki':'https://en.wikipedia.org/wiki/Douglas_fir'},
          {'genus':'Robinia','species':'pseudoacacia','commonName':'Black Locust','wiki':'https://en.wikipedia.org/wiki/Robinia_pseudoacacia'},
+         {'genus':'Taxus','species':'brevifolia','commonName':'Pacific Yew','wiki':'https://en.wikipedia.org/wiki/Taxus_brevifolia'},
+         {'genus':'Tetracentron','species':'sinense','commonName':'Spur Leaf','wiki':'https://en.wikipedia.org/wiki/Tetracentron'},
          {'genus':'Tsuga','species':'heterophylla','commonName':'Western Hemlock','wiki':'https://en.wikipedia.org/wiki/Tsuga_heterophylla'},
          {'genus':'Ulmus','species':'americana','commonName':'White Elm','wiki':'https://en.wikipedia.org/wiki/Ulmus_americana'},
          {'genus':'Ulmus','species':'minor','commonName':'Field Elm','wiki':'https://en.wikipedia.org/wiki/Ulmus_minor'}
