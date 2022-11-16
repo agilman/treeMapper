@@ -21,11 +21,10 @@
   let newTreeLayer;
   let parkTreesLayer;
   let selectedTreeLayer;
+  let toolTipLayer;
   let selectedTreeIndex=-1;
   let notes = [];
   let newNote = '';
-
-  let toolTipLayer;
   
   onMount(async function () {
     leaflet = await import('leaflet');
@@ -81,11 +80,11 @@
 
     const mylatlng = {'lat': myTree.lat,'lng':myTree.lng}
     leaflet.tooltip().setLatLng(mylatlng).setContent(myTree.species.commonName).addTo(toolTipLayer);
-  }
+  };
 
   function mouseOutofTree(e){
     toolTipLayer.clearLayers();
-  }
+  };
   
   async function drawParkTrees(){
     parkTreesLayer.clearLayers();
@@ -118,8 +117,7 @@
           color:'red'
          });
         myCircle.treeId=parkTrees[i].id;
-        myCircle.addTo(selectedTreeLayer);
-
+        myCircle.on('mouseover',mouseOverTree).on('mouseout',mouseOutofTree).addTo(selectedTreeLayer);
         map.panTo(myLatLng);
       }
     } //end for
