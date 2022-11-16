@@ -30,13 +30,15 @@
 
     const parkResponse = await fetch(url+"/api/parks");
     const myParks = await parkResponse.json();
-  
+    const mapboxToken = "pk.eyJ1IjoiYWdpbG1hbiIsImEiOiI3a05GVF9vIn0.c5pOjAXGeRPbv35PRmK90A";
+    const myurl = "https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/tiles/{z}/{x}/{y}?access_token=" + mapboxToken;
+
     parks = myParks;
     if(parks.length){
       selectedPark=parks[0].id;
 
       map = leaflet.map(mapElement).setView([parks[0].lat,parks[0].lng], parks[0].zoom);
-      leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      leaflet.tileLayer(myurl, {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 

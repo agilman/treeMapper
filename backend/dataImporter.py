@@ -38,7 +38,7 @@ trees = [{'genus':'Acer','species':'campestre','commonName':'Field Maple','wiki'
          {'genus':'Pinus','species':'monticola','commonName':'Western White Pine','wiki':'https://en.wikipedia.org/wiki/Western_white_pine'},
          {'genus':'Quercus','species':'rubra','commonName':'Northern Red Oat','wiki':'https://en.wikipedia.org/wiki/Quercus_rubra'},
          {'genus':'Quercus','species':'robur','commonName':'English Oak','wiki':'https://en.wikipedia.org/wiki/Quercus_robur'},
-         {'genus':'Quercus','species':'coccinea','commonName':'English Oak','wiki':'https://en.wikipedia.org/wiki/Quercus_coccinea'},
+         {'genus':'Quercus','species':'coccinea','commonName':'Scarlet Oak','wiki':'https://en.wikipedia.org/wiki/Quercus_coccinea'},
          {'genus':'Pseudotsuga','species':'menziesii','commonName':'Douglas Fir','wiki':'https://en.wikipedia.org/wiki/Douglas_fir'},
          {'genus':'Robinia','species':'pseudoacacia','commonName':'Black Locust','wiki':'https://en.wikipedia.org/wiki/Robinia_pseudoacacia'},
          {'genus':'Taxus','species':'brevifolia','commonName':'Pacific Yew','wiki':'https://en.wikipedia.org/wiki/Taxus_brevifolia'},
