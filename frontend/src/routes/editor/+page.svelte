@@ -24,6 +24,8 @@
   let selectedTreeIndex=-1;
   let notes = [];
   let newNote = '';
+
+  let toolTipLayer;
   
   onMount(async function () {
     leaflet = await import('leaflet');
@@ -45,6 +47,7 @@
       newTreeLayer = leaflet.layerGroup().addTo(map);
       parkTreesLayer = leaflet.layerGroup().addTo(map);
       selectedTreeLayer = leaflet.layerGroup().addTo(map);
+      toolTipLayer = leaflet.layerGroup().addTo(map);
       map.on('click',mapClick);
 
       const resp = await fetch(url+"/api/trees/"+selectedPark);
@@ -58,11 +61,31 @@
   });
 
   onDestroy(async () => {
-        if(map) {
-            console.log('Unloading Leaflet map.');
-            map.remove();
-        }
-    });
+    if(map) {
+        console.log('Unloading Leaflet map.');
+        map.remove();
+    }
+  });
+
+  function mouseOverTree(e){
+    const tid = e.target.treeId;
+    let myTree;
+    for (var i=0;i<parkTrees.length;i++){
+      if(parkTrees[i].id==tid){
+        myTree = parkTrees[i];
+      }
+    }
+
+    //clear previous tooltip
+    toolTipLayer.clearLayers();
+
+    const mylatlng = {'lat': myTree.lat,'lng':myTree.lng}
+    leaflet.tooltip().setLatLng(mylatlng).setContent(myTree.species.commonName).addTo(toolTipLayer);
+  }
+
+  function mouseOutofTree(e){
+    toolTipLayer.clearLayers();
+  }
   
   async function drawParkTrees(){
     parkTreesLayer.clearLayers();
@@ -73,7 +96,7 @@
         radius:parkTrees[i].size
       })
       myCircle.treeId=parkTrees[i].id;
-      myCircle.addTo(parkTreesLayer).on("click",treeClick);
+      myCircle.addTo(parkTreesLayer).on("click",treeClick).on('mouseover',mouseOverTree).on('mouseout',mouseOutofTree);
     }
   };
 
