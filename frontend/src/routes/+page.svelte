@@ -4,7 +4,7 @@
 <br>
 <br>
 <br>
-TODO: [2/6]
+TODO: [3/6]
 <br>
  - [x] Move to Mapbox maps !important!
 <br>
@@ -12,7 +12,7 @@ TODO: [2/6]
 <br>
  - [ ] 'About' page
 <br>
- - [ ] Button for removing trees
+ - [x] Button for removing trees
 <br>
  - [ ] Photo Upload
  <br>

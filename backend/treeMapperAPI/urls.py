@@ -25,5 +25,6 @@ urlpatterns = [
     path('api/parks', api.parks),
     path('api/trees',api.trees),
     path('api/trees/<int:parkId>',api.trees),
+    path('api/tree/<int:treeId>', api.tree),
     path('api/notes/<int:treeId>',api.notes)
 ]

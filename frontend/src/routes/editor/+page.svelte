@@ -211,6 +211,25 @@
   function convertTimeStamp(myTs){
     return moment(myTs).format('MM/DD/YYYY h:mmA');
   };
+  
+  async function deleteTreeClick(){
+    console.log('deleting tree',selectedTreeIndex);
+    const myTree = parkTrees[selectedTreeIndex];
+
+    const res = await fetch(url+'/api/tree/'+myTree.id, {
+			method: 'DELETE',
+      headers: {
+        'Content-type': 'application/json'
+      }});
+    
+    const resJson = await res.json();
+    if(resJson[0]==="OK"){ // TODO !!! Make sure delete is successful
+      parkTrees.splice(selectedTreeIndex,1);
+      selectedTreeIndex = -1;
+      selectedTreeLayer.clearLayers();
+      drawParkTrees();
+    }
+  };
 </script>
 <div class="flex-row">
   <select name="parks" id="parks" bind:value={selectedPark} on:change={changePark} class="rounded-lg border mx-3 mt-1 p-2">
@@ -255,7 +274,8 @@
       <u><b>{parkTrees[selectedTreeIndex].species.commonName}</b></u> - 
       <a href="{parkTrees[selectedTreeIndex].species.wiki}">
         {parkTrees[selectedTreeIndex].species.genus}  {parkTrees[selectedTreeIndex].species.species}
-      </a> 
+      </a>
+      <button class="rounded-lg border m-1 p-1 hover:bg-red-400" on:click={deleteTreeClick}>DELETE</button>
       <br>
       <label for="treeNotes">Note:</label>
       <input type="text" maxlength="128" id="treeNotes" bind:value={newNote} class="rounded-lg border border-grey-400 m-2 p-1" >

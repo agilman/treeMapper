@@ -54,7 +54,13 @@ def trees(request,parkId=None):
         serialized = TreesSerializer(newTree).data
         return JsonResponse(serialized,safe=False)
 
-
+@csrf_exempt
+def tree(request,treeId):
+    if request.method =='DELETE':
+        myTree = Trees.objects.get(id=treeId)
+        myTree.delete()
+        return JsonResponse(['OK'],safe=False)
+        
 @csrf_exempt
 def notes(request,treeId=None):
     if request.method=='GET':
