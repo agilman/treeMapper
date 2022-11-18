@@ -1,12 +1,10 @@
 <script>
   import { onMount, onDestroy} from 'svelte';
-  import.meta.env.SSR ; 
   import moment from 'moment';
 
   let url = 'http://localhost:8000';
 
-  let leaflet; // L : All leaflet types: map, circle, groupLayer etc
-  let mapElement; //Binds to the <div> containing the map
+  let L; // L : All types: map, circle, groupLayer etc
   let map;
   
   let parks = [];
@@ -27,7 +25,7 @@
   let newNote = '';
   
   onMount(async function () {
-    leaflet = await import('leaflet');
+    L = await import('leaflet');
 
     const parkResponse = await fetch(url+"/api/parks");
     const myParks = await parkResponse.json();
@@ -38,15 +36,15 @@
     if(parks.length){
       selectedPark=parks[0].id;
 
-      map = leaflet.map(mapElement).setView([parks[0].lat,parks[0].lng], parks[0].zoom);
-      leaflet.tileLayer(myurl, {
+      map = L.map('map').setView([parks[0].lat,parks[0].lng], parks[0].zoom);
+      L.tileLayer(myurl, {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-      newTreeLayer = leaflet.layerGroup().addTo(map);
-      parkTreesLayer = leaflet.layerGroup().addTo(map);
-      selectedTreeLayer = leaflet.layerGroup().addTo(map);
-      toolTipLayer = leaflet.layerGroup().addTo(map);
+      newTreeLayer = L.layerGroup().addTo(map);
+      parkTreesLayer = L.layerGroup().addTo(map);
+      selectedTreeLayer = L.layerGroup().addTo(map);
+      toolTipLayer = L.layerGroup().addTo(map);
       map.on('click',mapClick);
 
       const resp = await fetch(url+"/api/trees/"+selectedPark);
@@ -79,7 +77,7 @@
     toolTipLayer.clearLayers();
 
     const mylatlng = {'lat': myTree.lat,'lng':myTree.lng}
-    leaflet.tooltip().setLatLng(mylatlng).setContent(myTree.species.commonName).addTo(toolTipLayer);
+    L.tooltip().setLatLng(mylatlng).setContent(myTree.species.commonName).addTo(toolTipLayer);
   };
 
   function mouseOutofTree(e){
@@ -91,7 +89,7 @@
 
     for(let i=0;i<parkTrees.length;i++){
       const myLatLng = [parkTrees[i].lat,parkTrees[i].lng];
-      const myCircle = leaflet.circle(myLatLng,{
+      const myCircle = L.circle(myLatLng,{
         radius:parkTrees[i].size
       })
       myCircle.treeId=parkTrees[i].id;
@@ -104,7 +102,7 @@
     //  -highlight the tree on the map, center the map on it.
     //  -display tree info in side panel
 
-    leaflet.DomEvent.stopPropagation(e); // prevent map from getting click event and drawing a new tree
+    L.DomEvent.stopPropagation(e); // prevent map from getting click event and drawing a new tree
     selectedTreeLayer.clearLayers();
     
     for(let i=0;i<parkTrees.length;i++){
@@ -112,7 +110,7 @@
         selectedTreeIndex = i;
 
         const myLatLng = [parkTrees[i].lat,parkTrees[i].lng];
-        const myCircle = leaflet.circle(myLatLng,{
+        const myCircle = L.circle(myLatLng,{
           radius:parkTrees[i].size,
           color:'red'
          });
@@ -155,7 +153,7 @@
 
   function redrawNewTree(){
     newTreeLayer.clearLayers();
-    var circle = leaflet.circle(newTreeCoords, {
+    var circle = L.circle(newTreeCoords, {
       color: 'green',
       fillColor: '#1f9520',
       fillOpacity: 0.5,
@@ -267,7 +265,7 @@
 
 <div class="flex items-start mt-2">
   <map-wrapper class="w-3/4">
-    <div bind:this={mapElement} class="w-full h-full" style="height:500px"></div>
+    <div id='map' class="w-full h-full" style="height:500px"></div>
   </map-wrapper>
   <div class="flex-col w-1/4 items-start">
     {#if selectedTreeIndex > -1}
