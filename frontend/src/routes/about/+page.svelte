@@ -23,3 +23,11 @@ Mr Wesselink's original work:
 <br>
 <a href="https://cob.org/wp-content/uploads/broadway-park-tree-brochure.pdf" class="underline"> Broadway Park Trees</a>
 </p>
+<br>
+<br>
+<div class='underline'>TODO:</div>
+[x] Show notes on tree click.
+<br>
+[ ] Move to vector tiles.
+<br>
+[ ] Implement photo upload.

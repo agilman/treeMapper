@@ -174,6 +174,15 @@
         <u><b>{parkTrees[selectedTreeIndex].species.commonName}</b></u> - 
           {parkTrees[selectedTreeIndex].species.genus}  {parkTrees[selectedTreeIndex].species.species}
         </a>
+
+        <div>
+          {#each notes as note}
+            <div>
+              {convertTimeStamp(note.ts)} - <p>{note.text}</p>
+              <br>
+            </div>
+          {/each}
+        </div>
       {/if}
     </div>
   </div>
