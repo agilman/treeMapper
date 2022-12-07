@@ -2,9 +2,8 @@
     import { onMount, onDestroy} from 'svelte';
     import moment from 'moment';
   
-    import { env } from '$env/dynamic/private';
-    console.log('backend url', env.BACKEND_URL);
-    let url = env.BACKEND_URL;
+    import { PUBLIC_BACKEND_URL } from '$env/static/public';
+    let url = PUBLIC_BACKEND_URL;
   
     let L; // L : All types: map, circle, groupLayer etc
     let map;
