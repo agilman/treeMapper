@@ -2,7 +2,9 @@
   import { onMount, onDestroy} from 'svelte';
   import moment from 'moment';
 
-  let url = 'http://localhost:8000';
+  import { env } from '$env/dynamic/private';
+  console.log('backend url', env.BACKEND_URL);
+  let url = env.BACKEND_URL;
 
   let L; // L : All types: map, circle, groupLayer etc
   let map;
@@ -229,6 +231,17 @@
     }
   };
 </script>
+<div class="flex justify-between p-3 bg-cyan-900 h-1/6 text-slate-200 font-sans font-bold text-2xl items-center">
+  <div class="font-extrabold text-3xl">
+    <a href="https://www.agilman.org">Alex Gilman</a>
+    |
+    <a href="/">Tree Mapper</a>
+  </div>
+  <div class="flex align-end">
+  <div class="px-3"><a href="/editor">Editor</a></div>
+  <div class="px-2"><a href="/about">About</a></div>
+  </div>
+</div>
 <div class="flex-row">
   <select name="parks" id="parks" bind:value={selectedPark} on:change={changePark} class="rounded-lg border mx-3 mt-1 p-2">
     {#each parks as park}
