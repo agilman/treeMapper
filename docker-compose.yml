@@ -1,0 +1,16 @@
+version: "2.14.1"
+services:
+  ui: 
+    build: ./frontend/
+    ports: 
+      - "3000:3000"
+    command: waitress-serve --listen="0.0.0.0:8030" agilman.wsgi:application
+    restart: always
+  api:
+    build: ./backend/
+    ports: 
+      - "8000:8000"
+    command: node build
+    volumes: 
+      - backend:/app
+    restart: always
