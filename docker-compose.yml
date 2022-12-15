@@ -4,13 +4,13 @@ services:
     build: ./frontend/
     ports: 
       - "3000:3000"
-    command: waitress-serve --listen="0.0.0.0:8030" agilman.wsgi:application
+    command: node build
     restart: always
   api:
     build: ./backend/
     ports: 
       - "8000:8000"
-    command: node build
+    command: waitress-serve --listen="0.0.0.0:8000" treeMapperAPI.wsgi:application
     volumes: 
-      - backend:/app
+      - ./backend:/app
     restart: always
